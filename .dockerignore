@@ -1,0 +1,12 @@
+.venv
+tests
+tools
+__pycache__
+*.pyc
+.pytest_cache
+config.yaml
+.env
+stack.env.example
+config.example.yaml
+README.md
+docker-compose.yml
