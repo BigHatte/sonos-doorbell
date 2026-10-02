@@ -1,7 +1,7 @@
 # Stack for Portainer (Stacks -> Add stack -> Repository) or plain
-# "docker compose up -d --build". All settings come from environment
-# variables; in Portainer they are entered under "Environment variables",
-# locally they are read from a .env file next to this file.
+# "docker compose up -d --build". Everything is configured in the web
+# interface and stored in the volume below. The environment variables are
+# only a seed for the very first start (see stack.env.example).
 services:
   sonos-doorbell:
     build: .
@@ -11,20 +11,27 @@ services:
     # Host network: needed for Sonos discovery (SSDP multicast) and so the
     # speakers can fetch the chime file from this host.
     network_mode: host
+    volumes:
+      - sonos-doorbell-data:/data
     environment:
       TZ: ${TZ:-Europe/Berlin}
-      ADVERTISE_HOST: ${ADVERTISE_HOST:?ADVERTISE_HOST fehlt - LAN-IP des Docker-Hosts eintragen}
       PORT: ${PORT:-5005}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # Seed values, only used while /data/config.json does not exist yet.
+      ADVERTISE_HOST: ${ADVERTISE_HOST:-}
+      PLAYERS: ${PLAYERS:-}
       DEFAULT_ZONES: ${DEFAULT_ZONES:-all}
-      DEFAULT_SOUND: ${DEFAULT_SOUND:-gong}
+      DEFAULT_SOUND: ${DEFAULT_SOUND:-ding-dong}
       DEFAULT_VOLUME: ${DEFAULT_VOLUME:-30}
       ZONE_VOLUMES: ${ZONE_VOLUMES:-}
-      PLAYERS: ${PLAYERS:-}
       COOLDOWN_S: ${COOLDOWN_S:-3}
       DISCOVERY_REFRESH_S: ${DISCOVERY_REFRESH_S:-300}
-      LOG_LEVEL: ${LOG_LEVEL:-INFO}
     logging:
       driver: json-file
       options:
         max-size: 5m
         max-file: "3"
+
+volumes:
+  sonos-doorbell-data:
+    name: sonos-doorbell-data
