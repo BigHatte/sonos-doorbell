@@ -34,10 +34,6 @@ durch die Bereiche. Empfohlene Reihenfolge: Boxen, Profil, Loxone.
 
 ![Profile mit Loxone-Befehlen](screenshots/profile.png)
 
-Auf dem Handy sieht die Oberfläche so aus:
-
-![Profile auf dem Handy](screenshots/handy-profil.png)
-
 ## Boxen
 
 Im Reiter *Boxen* stehen alle angelegten Sonos-Boxen mit Verbindungsstatus
