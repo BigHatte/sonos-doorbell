@@ -8,6 +8,10 @@ unterbrochen, sondern kurz leiser gestellt und läuft danach normal weiter.
 Eingerichtet wird alles in einer Weboberfläche, Konfigurationsdateien sind
 nicht nötig.
 
+![Weboberfläche: Profile mit Loxone-Befehlen](docs/screenshots/profile.png)
+
+**➜ Ausführliche Anleitung mit Screenshots: [docs/anleitung.md](docs/anleitung.md)**
+
 ```
 Klingeltaster ──► Loxone Miniserver ──HTTP──► sonos-doorbell ──Websocket──► Sonos-Boxen
                   (virtueller Ausgang)        (Docker)          (Port 1443)
@@ -82,7 +86,7 @@ Bei **Docker Desktop (Windows/macOS)** muss Host-Networking in den
 Einstellungen aktiviert sein. Alternativ:
 - in `docker-compose.yml` `network_mode: host` durch `ports: ["5005:5005"]` ersetzen,
 - die Boxen per IP von Hand anlegen (die Suche per Multicast geht dann nicht),
-- unter Einstellungen die LAN-IP des Rechners als „Adresse für die Boxen“ eintragen.
+- unter Einstellungen die LAN-IP des Rechners als „Adresse dieses Servers“ eintragen.
 
 ## Einrichtung in der Weboberfläche
 
@@ -96,7 +100,7 @@ Einstellungen aktiviert sein. Alternativ:
 4. **Profil anlegen** (Reiter *Profile*): Namen, Gong und Sperrzeit wählen, die
    Boxen ankreuzen und je Box die Lautstärke einstellen. Mit „Testen“ wird der
    Gong sofort abgespielt, unabhängig von der Sperrzeit.
-5. **Einstellungen:** Unter „Adresse für die Boxen“ steht die IP des Docker-Hosts,
+5. **Einstellungen:** Unter „Adresse dieses Servers (für die Boxen)“ steht die IP des Docker-Hosts,
    unter der die Boxen den Gong abrufen. Leer bedeutet automatische Erkennung.
    Bei Host-Networking passt das in der Regel; sonst die LAN-IP des Hosts eintragen.
 
@@ -225,7 +229,7 @@ Sonos-App und Home Assistant Ansagen abspielen.
 | Problem | Ursache und Lösung |
 |---|---|
 | Box zeigt keinen grünen Punkt | Box nicht erreichbar oder Port 1443 blockiert (Firewall, getrenntes VLAN). Box muss S2 nutzen. |
-| Testgong läuft ohne Fehler, aber kein Ton | Die Box kann die Gong-Datei nicht laden. Unter *Einstellungen* die „Adresse für die Boxen“ prüfen und von einem anderen Gerät im LAN `http://<nas-ip>:5005/sounds/ding-dong.wav` öffnen. Port 5005 in der Host-Firewall freigeben. |
+| Testgong läuft ohne Fehler, aber kein Ton | Die Box kann die Gong-Datei nicht laden. Unter *Einstellungen* die „Adresse dieses Servers“ prüfen und von einem anderen Gerät im LAN `http://<nas-ip>:5005/sounds/ding-dong.wav` öffnen. Port 5005 in der Host-Firewall freigeben. |
 | Historie zeigt `loadAudioClip abgelehnt` | Die Box lehnt die Ansage ab; der `errorCode` nennt den Grund. |
 | „Im Netzwerk suchen“ findet nichts | Multicast funktioniert nicht (z. B. Docker Desktop, VLAN). Boxen per IP anlegen. |
 | Upload schlägt fehl | Die Datei ist kein gültiges Audio, größer als 20 MB, oder ffmpeg fehlt (nur bei Betrieb ohne das Docker-Image). |
@@ -250,7 +254,8 @@ app/
   static/       Weboberfläche (HTML, CSS, JavaScript)
 sounds/         Eingebaute Gongs
 tests/          Tests (pytest)
-tools/          Skript zum Erzeugen der eingebauten Gongs
+tools/          Skripte: eingebaute Gongs erzeugen, Screenshots erstellen
+docs/           Anleitung und Screenshots
 ```
 
 ## Entwicklung
@@ -259,6 +264,13 @@ tools/          Skript zum Erzeugen der eingebauten Gongs
 python -m venv .venv
 .venv/Scripts/pip install -r requirements-dev.txt   # Linux/macOS: .venv/bin/pip
 .venv/Scripts/python -m pytest
+```
+
+Die Screenshots der Anleitung entstehen aus Demodaten und lassen sich neu
+erzeugen (benötigt Edge, Chrome oder Chromium; sonst `BROWSER_PATH` setzen):
+
+```bash
+.venv/Scripts/python tools/screenshots.py
 ```
 
 Lokal ohne Docker starten (für Uploads wird ffmpeg benötigt):

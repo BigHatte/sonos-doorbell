@@ -131,7 +131,7 @@ main { max-width: 1000px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
 
 /* ---- forms ---- */
 label { font-weight: 600; font-size: .9rem; }
-.field { display: grid; gap: .3rem; margin-bottom: .9rem; }
+.field { display: grid; align-content: start; gap: .3rem; margin-bottom: .9rem; }
 .field .hint { color: var(--muted); font-size: .82rem; font-weight: 400; }
 input[type=text], input[type=password], input[type=number], select, input[type=file] {
   width: 100%; font: inherit; color: var(--text); background: var(--surface);
